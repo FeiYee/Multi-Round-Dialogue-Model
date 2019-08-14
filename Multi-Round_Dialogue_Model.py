@@ -182,6 +182,9 @@ class BuildModel:
         self.model = self.build()
 
     class BuildWord2Vec:
+        ‘’‘
+            Word2Vec转化
+        ’‘’
         def __init__(self,file_name):
             self.W2Vembedding = self.getEmbedding(file_name)
 
@@ -211,15 +214,25 @@ class BuildModel:
         return K.max(seq, 1)
 
     def build(self):
-        # 用户级别\用户年龄\品类\订单状态
         '''
-        0 ~ 5       :6
-        0 ~ 7       :8
-        0 ~ 2484    :2485
-        0 ~ 3       :4
+        根据数据集自行定义
+        基础信息部分：session_info
+            用户级别\用户年龄\品类\订单状态
+            字段名称    取值范围    长度
+            用户级别：   0 ~ 5       :6
+            用户年龄：   0 ~ 7       :8
+            商品品类：   0 ~ 2484    :2485
+            订单状态：   0 ~ 3       :4
         '''
+        
         session_info = Input(shape=(None,))
-
+        '''
+        标准信息部分：
+            问题输入标量： x_in
+            正向回答标量： yl_in
+            逆向回答标量： yr_in
+            历史问题标量： z_in
+        '''
         x_in = Input(shape=(None,))
         yl_in = Input(shape=(None,))
         yr_in = Input(shape=(None,))
@@ -418,7 +431,7 @@ class BuildModel:
             return self.data_info.id2str(yr_id[rk][::-1])
 
     def to_one_hot(self, x, length = None):
-        # 输出一个词表大小的向量，来标记该词是否在文章出现过
+        # 输出一个词表大小的向量，来标记该词是否在问题出现过
         if length == None:
             length = len(self.data_info.chars) + 4
         x, x_mask = x
